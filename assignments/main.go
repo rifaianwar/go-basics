@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand/v2"
 	"sort"
 	"strings"
 )
@@ -25,7 +26,7 @@ func main() {
 	canMakeArithmeticProgression([]int{5, 1, 9})    // true; 9, 5, 1 adalah baris aritmatik -4
 	canMakeArithmeticProgression([]int{1, 2, 4, 8}) // false; 1, 2, 4, 8 bukan baris aritmatik, melainkan geometrik x2
 
-	// tesDeck()
+	tesDeck()
 }
 
 // https://leetcode.com/problems/sign-of-the-product-of-an-array
@@ -129,18 +130,31 @@ type Card struct {
 // assume Ace-Spade on top of deck.
 func (d *Deck) New() {
 	// write code here
+	d.cards = make([]Card, 0, 52)
+
+	for symbol := 0; symbol < 4; symbol++ {
+		for number := 1; number <= 13; number++ {
+			d.cards = append(d.cards, Card{symbol: symbol, number: number})
+		}
+	}
 }
 
 // PeekTop return n cards from the top
 func (d Deck) PeekTop(n int) []Card {
 	// write code here
-	return nil
+	if n > len(d.cards) {
+		n = len(d.cards)
+	}
+	return d.cards[:n]
 }
 
 // PeekTop return n cards from the bottom
 func (d Deck) PeekBottom(n int) []Card {
 	// write code here
-	return nil
+	if n < len(d.cards) {
+		n = len(d.cards)
+	}
+	return d.cards[:n]
 }
 
 // PeekCardAtIndex return a card at specified index
@@ -151,6 +165,9 @@ func (d Deck) PeekCardAtIndex(idx int) Card {
 // Shuffle randomly shuffle the deck
 func (d *Deck) Shuffle() {
 	// write code here
+	rand.Shuffle(len(d.cards), func(i, j int) {
+		d.cards[i], d.cards[j] = d.cards[j], d.cards[i]
+	})
 }
 
 // Cut perform single "Cut" technique. Move n top cards to bottom
